@@ -24,12 +24,9 @@ const AddWorkout = () => {
       setReps('')
       setSets('')
       setWeight('')
-
-      console.log(data)
     } catch (error: any) {
       const errorMessage = error.response.data.error
       setError(errorMessage)
-      console.log()
     }
   }
 
