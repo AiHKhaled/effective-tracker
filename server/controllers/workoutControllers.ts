@@ -33,6 +33,20 @@ const getWorkout = async (req: express.Request, res: express.Response) => {
 
 const createWorkout = async (req: express.Request, res: express.Response) => {
   const { workoutName, reps, sets, weight } = req.body
+  let emptyFields = []
+  if (!workoutName) emptyFields.push('workoutName')
+  if (!reps) emptyFields.push('reps')
+  if (!sets) emptyFields.push('sets')
+  if (!weight) emptyFields.push('weight')
+
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({
+        error: `${emptyFields.join(', ')} field is required`,
+        emptyFields,
+      })
+  }
 
   try {
     const newWorkout = await workout.create({

@@ -72,12 +72,20 @@ header a {
   border-radius: 50%;
   color: #333;
 }
+.workout-details span:hover {
+  background: #1aac83;
+  color: #fff;
+}
+.workout-details .date {
+  margin-top: 15px;
+}
 label,
 input {
   display: block;
   font-weight: 500;
 }
 input {
+  font-family: 'Poppins';
   padding: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
@@ -107,6 +115,9 @@ div.error {
   color: var(--error);
   border-radius: 4px;
   margin: 20px 0;
+}
+input.error {
+  border: 1px solid var(--error);
 }
 
 @media (min-width: 600px) {

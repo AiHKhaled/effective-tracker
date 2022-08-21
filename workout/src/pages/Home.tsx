@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import Container from '../Layout/container'
+import { useEffect } from 'react'
 import axios from 'axios'
-import Workout, { WorkoutProps } from './Workout'
+import Workout from './Workout'
 import AddWorkout from '../components/AddWorkout'
+import { useWorkoutsContext } from '../context/WorkoutContext'
 
 const Home = () => {
-  const [workouts, setWorkouts] = useState<any>([])
+  const { state, dispatch } = useWorkoutsContext()
+  const { workouts } = state
   const url = 'http://localhost:4000'
 
   const fetchWorkouts = async () => {
@@ -16,7 +17,7 @@ const Home = () => {
           Accept: 'application/json',
         },
       })
-      setWorkouts(data)
+      dispatch({ type: 'FETCH_SUCCESS', payload: data })
     } catch {
       ;(error: any) => {
         console.log(error)
@@ -26,14 +27,14 @@ const Home = () => {
 
   useEffect(() => {
     fetchWorkouts()
-  }, [])
+  }, [dispatch])
 
   return (
     <div className="home">
       <div className="workouts">
         {workouts &&
           workouts.map((workout: any) => (
-            <div>
+            <div key={workout._id}>
               <Workout workout={workout} />{' '}
             </div>
           ))}

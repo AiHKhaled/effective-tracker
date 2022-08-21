@@ -1,12 +1,16 @@
 import axios from 'axios'
 import React, { useState } from 'react'
+import { useWorkoutsContext } from '../context/WorkoutContext'
 
 const AddWorkout = () => {
+  const { dispatch } = useWorkoutsContext()
   const [workoutName, setWorkoutName] = useState<string>('')
   const [reps, setReps] = useState<number | string>('')
   const [weight, setWeight] = useState<number | string>('')
   const [sets, setSets] = useState<number | string>('')
   const [error, setError] = useState(null)
+  const [empty, setEmpty] = useState<string[]>([])
+
   const url = 'http://localhost:4000/workouts'
   const workout = { workoutName, reps, weight, sets }
   const headers = {
@@ -24,9 +28,13 @@ const AddWorkout = () => {
       setReps('')
       setSets('')
       setWeight('')
+      setEmpty([])
+      dispatch({ type: 'CREATE_WORKOUT', payload: data })
     } catch (error: any) {
-      const errorMessage = error.response.data.error
-      setError(errorMessage)
+      const errorMessage = error.response.data
+      setError(errorMessage.error)
+
+      setEmpty(errorMessage.emptyFields)
     }
   }
 
@@ -38,14 +46,27 @@ const AddWorkout = () => {
       <input
         value={workoutName}
         onChange={(e) => setWorkoutName(e.target.value)}
+        className={empty.includes('workoutName') ? 'error' : ''}
       />
 
       <label>Weight</label>
-      <input value={weight} onChange={(e) => setWeight(e.target.value)} />
+      <input
+        value={weight}
+        onChange={(e) => setWeight(e.target.value)}
+        className={empty.includes('weight') ? 'error' : ''}
+      />
       <label>Reps</label>
-      <input value={reps} onChange={(e) => setReps(e.target.value)} />
+      <input
+        value={reps}
+        onChange={(e) => setReps(e.target.value)}
+        className={empty.includes('reps') ? 'error' : ''}
+      />
       <label>Sets</label>
-      <input value={sets} onChange={(e) => setSets(e.target.value)} />
+      <input
+        value={sets}
+        onChange={(e) => setSets(e.target.value)}
+        className={empty.includes('sets') ? 'error' : ''}
+      />
       <button>add workout</button>
       {error && <div className="error">{error}</div>}
     </form>
